@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Incident Manager
 
-## Getting Started
+Une application web pour la gestion des incidents et des plans de continuité d'activité.
 
-First, run the development server:
+## Fonctionnalités
 
+- Gestion des incidents
+  - Déclaration d'incidents
+  - Suivi de l'état des incidents
+  - Affectation des responsables
+  - Filtrage et recherche
+
+- Plans de continuité d'activité
+  - Création et gestion des plans
+  - Étapes détaillées
+  - Association aux services
+
+- Tests de reprise
+  - Simulation des scénarios d'incident
+  - Suivi des résultats
+  - Rapports automatiques
+
+- Gestion des utilisateurs
+  - Authentification
+  - Rôles (administrateur, utilisateur standard, équipe technique)
+  - Permissions
+
+## Prérequis
+
+- Node.js 18 ou supérieur
+- PostgreSQL 12 ou supérieur
+- npm ou yarn
+
+## Installation
+
+1. Cloner le dépôt :
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/votre-username/incident-manager.git
+cd incident-manager
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Installer les dépendances :
+```bash
+npm install
+# ou
+yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configurer les variables d'environnement :
+```bash
+cp .env.example .env
+```
+Modifier le fichier `.env` avec vos paramètres :
+- `DATABASE_URL` : URL de connexion à la base de données PostgreSQL
+- `NEXTAUTH_SECRET` : Clé secrète pour l'authentification
+- `NEXTAUTH_URL` : URL de l'application (http://localhost:3000 en développement)
+- `SMTP_*` : Configuration du serveur SMTP pour les notifications
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Initialiser la base de données :
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-## Learn More
+5. Créer un utilisateur administrateur :
+```bash
+npx prisma db seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Démarrage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Lancer l'application en mode développement :
+```bash
+npm run dev
+# ou
+yarn dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Ouvrir [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-## Deploy on Vercel
+## Déploiement
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Construire l'application :
+```bash
+npm run build
+# ou
+yarn build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Démarrer l'application en production :
+```bash
+npm start
+# ou
+yarn start
+```
+
+## Structure du projet
+
+```
+src/
+  ├── app/                    # Pages et routes de l'application
+  │   ├── api/               # API routes
+  │   ├── auth/              # Pages d'authentification
+  │   ├── incidents/         # Pages de gestion des incidents
+  │   ├── plans/             # Pages de gestion des plans
+  │   └── tests/             # Pages de gestion des tests
+  ├── components/            # Composants React réutilisables
+  ├── hooks/                 # Hooks personnalisés
+  └── lib/                   # Utilitaires et configurations
+prisma/
+  └── schema.prisma         # Schéma de la base de données
+```
+
+## Technologies utilisées
+
+- [Next.js](https://nextjs.org/) - Framework React
+- [Prisma](https://www.prisma.io/) - ORM pour la base de données
+- [NextAuth.js](https://next-auth.js.org/) - Authentification
+- [TailwindCSS](https://tailwindcss.com/) - Framework CSS
+- [React Hook Form](https://react-hook-form.com/) - Gestion des formulaires
+- [Zod](https://github.com/colinhacks/zod) - Validation des données
+
+## Contribution
+
+1. Fork le projet
+2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/ma-fonctionnalite`)
+3. Commiter vos changements (`git commit -m 'Ajout de ma fonctionnalité'`)
+4. Pousser vers la branche (`git push origin feature/ma-fonctionnalite`)
+5. Ouvrir une Pull Request
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.

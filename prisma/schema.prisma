@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  incidents     Incident[]
+  tasks         Task[]
+  departments   Department[]
+}
+
+model Department {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  users       User[]
+  incidents   Incident[]
+  businessContinuityPlans BusinessContinuityPlan[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Incident {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  type        IncidentType
+  severity    Severity
+  status      Status    @default(OPEN)
+  department  Department @relation(fields: [departmentId], references: [id])
+  departmentId String
+  assignedTo  User?     @relation(fields: [assignedToId], references: [id])
+  assignedToId String?
+  tasks       Task[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  resolvedAt  DateTime?
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime?
+  incident    Incident  @relation(fields: [incidentId], references: [id])
+  incidentId  String
+  assignedTo  User?     @relation(fields: [assignedToId], references: [id])
+  assignedToId String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+}
+
+model BusinessContinuityPlan {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  department  Department @relation(fields: [departmentId], references: [id])
+  departmentId String
+  steps       BCPStep[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model BCPStep {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  order       Int
+  plan        BusinessContinuityPlan @relation(fields: [planId], references: [id])
+  planId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+  TECHNICAL
+}
+
+enum IncidentType {
+  TECHNICAL
+  SECURITY
+  OPERATIONAL
+  ENVIRONMENTAL
+  OTHER
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+} 
